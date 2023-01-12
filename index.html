@@ -19,13 +19,22 @@
     .button2 {
         margin: 0;
         position: absolute;
-        top: 45%;
+        top: 42%;
         left: 50%;
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
 
     .button3 {
+        margin: 0;
+        position: absolute;
+        top: 49%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .statuserror {
         margin: 0;
         position: absolute;
         top: 51%;
@@ -62,10 +71,8 @@
     </form>
     <h1 id="generating" class="generating" style="display: none; text-align: center ; font-size: 100px">Generating
         Bundle...</h1>
-
-        
-        <div id="message" class="button2" ></div>
-        <button id="refresh_page" onClick="window.location.href=window.location.href" class=" button3 " style="display: none; text-align: center">Refresh Page</button>
+        <button id="download_button" class="button2" onClick="window.location.href='https://nakivo-my.sharepoint.com/:f:/p/support_l2/Eoy5997BfTJNnSLfS2xY4t8Bm13r__2Td_ybeGhg1s1zfw?e=X3fKGm'" class=" button3 " style="display: none; text-align: center">Click here to open the file location</button>
+    <button id="refresh_page" onClick="window.location.href=window.location.href" class=" button3 " style="display: none; text-align: center">Refresh Page</button>
 
     <script>
         function submitCommand() {
@@ -76,28 +83,34 @@
             }
             document.getElementById("titleh1").style.display = "none";
             document.getElementById("form").style.display = "none";
-            document.getElementById("submit").style.display = "none";
-            document.getElementById("input_command").readOnly = true;
             document.getElementById("generating").style.display = "block";
             fetch('/download', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 'input_command': input_command })
+                body: JSON.stringify({
+                    input_command: input_command
+                })
             })
-                    .then(response => response.json())
-                    .then(data => {
-                        var btn = document.createElement("BUTTON");
-                        btn.innerHTML = "Check the file is available on Drive or not in here";
-                        document.getElementById("message").appendChild(btn);
-                        btn.onclick = function () {
-                            window.open("https://drive.google.com/drive/folders/1PRKRLuPNztYlrLFsQdqA2cC5uD3QPSVj?usp=sharing");
-                        }
-                        document.getElementById("submit").style.display = "none";
-                        document.getElementById("refresh_page").style.display = "block";
-                    });
-            }
+            .then(response => response.json())
+            .then(data => {
+                if(data.message == "File is available, browser opened with the link")
+            {
+                    document.getElementById("generating").innerHTML = "Generate Completed";
+                    document.getElementById("submit").style.display = "none";
+                    document.getElementById("download_button").style.display = "block";
+                    document.getElementById("refresh_page").style.display = "block";
+                }
+                else if(data.message == "File not found after 30 attempts") {
+                    document.getElementById("generating").innerHTML = "File not found after 30 attempts";
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
     </script>
 </body>
 
