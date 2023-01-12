@@ -9,45 +9,76 @@
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>Support Bundle Generator</title>
 </head>
+
 <style>
     .header {
         text-align: center;
         color: blueviolet;
     }
 
-    .container {
-        height: 200px;
-        position: relative;
+    .button2 {
+        margin: 0;
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 
+    .button3 {
+        margin: 0;
+        position: absolute;
+        top: 51%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
     }
 
     .center {
         margin: 0;
         position: absolute;
-        top: 15%;
+        top: 20%;
         left: 50%;
         -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .generating {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        text-align: center;
         transform: translate(-50%, -50%);
     }
 </style>
 
 <body>
-    <h1 class="header">Support Bundle Generator</h1><br>
-    <form>
+    <h1 class="header" id="titleh1">Support Bundle Generator</h1><br>
+    <form id="form">
         <input class="form-control" type="text"
             placeholder="Please input the link to download support bundle(via VPN) in here…" id="input_command"
             name="input_command">
-        <div class="container">
-            <div class="center">
-                <button id="submit" type="button" class="btn btn-primary " onclick="submitCommand()">Submit
-                    Link</button>
+        <button id="submit" type="button" class="btn btn-primary center " onclick="submitCommand()">Submit Link</button>
     </form>
-    <div id="message"></div>
+    <h1 id="generating" class="generating" style="display: none; text-align: center ; font-size: 100px">Generating
+        Bundle...</h1>
 
+        
+        <div id="message" class="button2" ></div>
+        <button id="refresh_page" onClick="window.location.href=window.location.href" class=" button3 " style="display: none; text-align: center">Refresh Page</button>
 
     <script>
-        function submitCommand(event) {
+        function submitCommand() {
             var input_command = document.getElementById("input_command").value;
+            if (!input_command) {
+                alert("Please enter a link to generate the support bundle.");
+                return;
+            }
+            document.getElementById("titleh1").style.display = "none";
+            document.getElementById("form").style.display = "none";
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("input_command").readOnly = true;
+            document.getElementById("generating").style.display = "block";
             fetch('/download', {
                 method: 'POST',
                 headers: {
@@ -55,17 +86,18 @@
                 },
                 body: JSON.stringify({ 'input_command': input_command })
             })
-                .then(response => response.json())
-                .then(data => {
-                    var btn = document.createElement("BUTTON");
-                    btn.innerHTML = "Click here to see your sb";
-                    document.getElementById("message").appendChild(btn);
-                    btn.onclick = function () {
-                        window.open("https://drive.google.com/drive/folders/1PRKRLuPNztYlrLFsQdqA2cC5uD3QPSVj?usp=sharing");
-                    }
-                    document.getElementById("submit").style.display = "none";
-                });
-        }
+                    .then(response => response.json())
+                    .then(data => {
+                        var btn = document.createElement("BUTTON");
+                        btn.innerHTML = "Check the file is available on Drive or not in here";
+                        document.getElementById("message").appendChild(btn);
+                        btn.onclick = function () {
+                            window.open("https://drive.google.com/drive/folders/1PRKRLuPNztYlrLFsQdqA2cC5uD3QPSVj?usp=sharing");
+                        }
+                        document.getElementById("submit").style.display = "none";
+                        document.getElementById("refresh_page").style.display = "block";
+                    });
+            }
     </script>
 </body>
 
