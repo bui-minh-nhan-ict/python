@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, jsonify
-import os
+import webbrowser
 import subprocess
-import time
+import requests
 
-app = Flask(__name__, template_folder='D:/Python')
+app = Flask(__name__, template_folder='D:/Python Github/python')
+coccoc_location = r"C:\Program Files\CocCoc\Browser\Application\browser.exe"
 
 
 @app.route('/')
@@ -14,11 +15,9 @@ def index():
 @app.route('/download', methods=['POST'])
 def download():
     input_command = request.json.get('input_command')
-    file_name = input_command.split("-_")[-1]
-    file_path = "E:\\" + file_name
-    while not os.path.exists(file_path):
-        time.sleep(20)
-    return jsonify({"message": "File is available"}), 200
+    subprocess.Popen(f'"{coccoc_location}" --start-minimized {input_command}',
+                     creationflags=subprocess.CREATE_NO_WINDOW)
+    return jsonify({"message": "Browser opened with the link"}), 200
 
 
 if __name__ == '__main__':

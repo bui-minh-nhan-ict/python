@@ -42,9 +42,6 @@
                 <button id="submit" type="button" class="btn btn-primary " onclick="submitCommand()">Submit
                     Link</button>
     </form>
-    <div id="loading" style="display:none">
-        <img src="loading.gif" alt="Loading...">
-    </div>
     <div id="message"></div>
 
 
@@ -60,21 +57,12 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    var file_name = input_command.split("-_")[-1];
-                    var file_path = "D:\\SB" + file_name;
-                    var intervalId = setInterval(function () {
-                        if (os.path.exists(file_path)) {
-                            clearInterval(intervalId);
-                            document.getElementById("loading").style.display = "none";
-                            var btn = document.createElement("BUTTON");
-                            btn.innerHTML = "Click here to see your sb";
-                            document.getElementById("message").appendChild(btn);
-                            btn.onclick = function () {
-                                window.open("https://drive.google.com/drive/folders/1PRKRLuPNztYlrLFsQdqA2cC5uD3QPSVj?usp=sharing");
-                            }
-                        }
-                    }, 20000);
-                    document.getElementById("loading").style.display = "block";
+                    var btn = document.createElement("BUTTON");
+                    btn.innerHTML = "Click here to see your sb";
+                    document.getElementById("message").appendChild(btn);
+                    btn.onclick = function () {
+                        window.open("https://drive.google.com/drive/folders/1PRKRLuPNztYlrLFsQdqA2cC5uD3QPSVj?usp=sharing");
+                    }
                     document.getElementById("submit").style.display = "none";
                 });
         }
